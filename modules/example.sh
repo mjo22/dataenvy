@@ -1,5 +1,5 @@
 #!/bin/bash
 #
-# Configure modules variable for particle data
+# Configure modules variable
 
-export MODULES="pdf visualize"
+export MODULES="example"
