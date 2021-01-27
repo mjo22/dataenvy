@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+#
+
+# Set location of dataenvy repository
+sourcedir=$(readlink -e -- $(dirname -- ${BASH_SOURCE}))
+export DATAENVY=$(echo $sourcedir)
+
+# Initialize variable for locations of path of source data
+export SOURCEPATHS=""
+
+# Initialize variable for setup data paths
+export SETUPPATHS=""
+
+# Write datasets we are working with for writing and plotting
+input=("$@")
+expanded=()
+for candidate in "${input[@]}"; do
+    for c in $candidate; do
+	expanded+=($c)
+    done
+done
+
+# Configure local settings. Assume they are shared across input datasets
+if [[ "${expanded[0]}" != "" ]]; then
+    dataset=$(readlink -e "$candidate")
+    if [[ "$dataset" == "" ]]; then
+	echo "$dataset is empty or does not exist"
+	exit
+    fi
+    source $dataset/local.sh
+fi
+
+# Configure global settings and DATAPATHS 
+datasets=()
+for candidate in "${expanded[@]}"; do
+    dataset=$(readlink -e "$candidate")
+    if [[ "$dataset" == "" ]]; then
+	echo "$dataset is empty or does not exist"
+	exit
+    fi
+
+    source $dataset/global.sh
+    
+    datasets+=($dataset)
+done
+
+export DATAPATHS=$(echo ${datasets[@]})
+export GLOBALDIR=$PWD

@@ -1,0 +1,9 @@
+ls
+*~
+*#
+*.pyc
+.ipynb_checkpoints
+*.png
+*.mp4
+*.out
+__pycache__
