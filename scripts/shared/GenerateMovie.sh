@@ -11,9 +11,7 @@ if [[ "$input_basename" == "" ]]; then
 fi
 
 input_directory="$(dirname -- $input_basename)"
-input_basename="$(basename -- $input_basename)"
-IFS='_' read -ra arr <<< "$input_basename"
-input_basename="$(basename -- $input_basename _)"
+input_basename="$(basename -- $(basename -- $input_basename) _)"
 
 # Output variables
 output_directory=${2:-"$input_directory"}

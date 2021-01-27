@@ -56,7 +56,7 @@ class WriteData(Script):
             data = read_hdul(inpath)[0]
             if pfunc != '':
                 logger.debug(f"Applying {pfunc}...")
-            data = preprocess(data, pfunc)
+            data = preprocess(data, pfunc, meta)
             logger.debug("Calculating...")
             result = calculate(data, **unpack(settings[names[0]], meta=meta))
             logger.info(f"Writing {outfn}")

@@ -74,10 +74,10 @@ source $outputpath/link.sh
 bash $setuppath/WriteData.sh $inputpath $outputpath/data
 
 # Write modules
-bash $outputpath/RunAll.sh Write local WARNING
+bash $outputpath/RunAll.sh Write local INFO
 
 # Create plots
-bash $outputpath/RunAll.sh Plot local WARNING
+bash $outputpath/RunAll.sh Plot local INFO
 
 # Get mp4 files
 moviepath=~/movies/$(basename -- $outputpath)

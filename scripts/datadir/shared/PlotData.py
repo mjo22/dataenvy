@@ -66,7 +66,7 @@ class PlotData(Script):
             result = reader(inpath)
             if pfunc != '':
                 logger.debug(f"Applying {pfunc}...")
-            result = preprocess(result, pfunc)
+            result = preprocess(result, pfunc, meta)
             fig, ax = build_plot(**unpack(settings[names[0]], meta=meta))
             plot_stat(*result, fig, ax,
                       **unpack(settings[names[1]], meta=meta))
