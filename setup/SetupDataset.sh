@@ -39,15 +39,19 @@ fi
 # Create dataset
 rsync -a --exclude '*~' $setuppath/template/* $outputpath
 
+# Get setuppath in terms of $DATAENVY
+cut=${setuppath#"$DATAENVY"}
+setupliteral="\$DATAENVY$cut"
+
 # Add source data path and setup path to global.sh
 sed -i "s:SOURCE_PLACEHOLDER:$inputpath:g" $outputpath/global.sh
-sed -i "s:SETUP_PLACEHOLDER:$setuppath:g" $outputpath/global.sh
+sed -i "s:SETUP_PLACEHOLDER:$setupliteral:g" $outputpath/global.sh
 
 # Add setup source directory to local.sh
-sed -i "s:PLACEHOLDER:$setuppath:g" $outputpath/local.sh
+sed -i "s:PLACEHOLDER:$setupliteral:g" $outputpath/local.sh
 
 # Add setup source directory to link.sh
-sed -i "s:PLACEHOLDER:$setuppath:g" $outputpath/link.sh
+sed -i "s:PLACEHOLDER:$setupliteral:g" $outputpath/link.sh
 
 # Add source data path to write_metadata.py
 sed -i "s:PLACEHOLDER:$inputpath:g" $outputpath/write_metadata.py
