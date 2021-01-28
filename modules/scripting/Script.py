@@ -8,7 +8,7 @@ config file
 import os
 import logging
 import numpy as np
-from scripting.config import load, unpack
+from scripting.config import load, unpack, shell_source
 from scripting.read import get_files, get_settings, get_metadata
 from scripting.execution import run
 
@@ -17,19 +17,23 @@ logger = logging.getLogger(__name__)
 logging.basicConfig()
 
 
-DATAPATHS = os.environ['DATAPATHS'].split()
-
-
 class Script(object):
     """
     An abstraction of a python script (very meta)
     """
 
-    def __init__(self, configfile,
-                 datapaths=DATAPATHS, io_scheme="output_all"):
-        self.io_scheme = io_scheme
+    def __init__(self, configfile):
+        # Read config
         self.config = unpack(load(configfile))
-        self.datasets = datapaths
+        # Source environment config if specified
+        if "configenvy" in self.config.keys():
+            if "DATAENVY" not in os.environ.keys():
+                raise ValueError("bash variable DATAENVY not set.")
+            dataenvy, args = os.environ['DATAENVY'], self.config['configenvy']
+            shell_source(f"{dataenvy}/configenvy {args}", verbose=1)
+        # Set variables that can be modified in subclass
+        self.io_scheme = "output_all"
+        self.datasets = os.environ['DATAPATHS'].split()
         self.required = ['inputext', 'outputext', 'inputdir', 'outputdir']
         self.optional = {'minframe': -np.inf, 'maxframe': np.inf, 'nskip': 0,
                          'overwrite': True, 'glob': '',

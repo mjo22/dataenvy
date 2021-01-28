@@ -22,20 +22,19 @@ logging.basicConfig()
 
 class PlotData(Script):
     """
-    Plot a statistic based on some config file
+    Plot some data based on some config file
     """
 
     def __init__(self, *args):
-        datapath = os.path.dirname(os.path.abspath(f"{__file__}/.."))
-        super(PlotData, self).__init__(*args,
-                                       datapaths=[datapath],
-                                       io_scheme="output_all")
+        super(PlotData, self).__init__(*args)
+        self.io_scheme = "output_all"
+        self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
         self.optional["fit"] = False
         self.required.extend(["reader"])
 
     def execute(self):
         """
-        Write powerspectrum plots
+        Write plots
         """
         self.prepare()
         # Get module

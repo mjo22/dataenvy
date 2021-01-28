@@ -45,5 +45,5 @@ for candidate in "${expanded[@]}"; do
     datasets+=($dataset)
 done
 
-export DATAPATHS=$(echo ${datasets[@]})
-export GLOBALDIR=$PWD
+export DATAPATHS="$(echo ${datasets[@]})"
+export GLOBALDIR="$PWD"

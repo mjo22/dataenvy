@@ -25,15 +25,14 @@ class WriteData(Script):
     """
 
     def __init__(self, *args):
-        datapath = os.path.dirname(os.path.abspath(f"{__file__}/.."))
-        super(WriteData, self).__init__(*args,
-                                        datapaths=[datapath],
-                                        io_scheme="output_all")
+        super(WriteData, self).__init__(*args)
+        self.io_scheme = "output_all"
+        self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
         self.required.extend(["writer"])
 
     def execute(self):
         """
-        Write a statistic to folder
+        Write data
         """
         self.prepare()
         # Unpack

@@ -74,10 +74,10 @@ source $outputpath/link.sh
 bash $setuppath/WriteData.sh $inputpath $outputpath/data
 
 # Write modules
-bash $outputpath/RunAll.sh Write local INFO
+bash $outputpath/RunModules.sh Write local INFO
 
 # Create plots
-bash $outputpath/RunAll.sh Plot local INFO
+bash $outputpath/RunModules.sh Plot local INFO
 
 # Goodbye!
 echo "Setup complete."
