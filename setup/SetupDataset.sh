@@ -79,10 +79,5 @@ bash $outputpath/RunAll.sh Write local INFO
 # Create plots
 bash $outputpath/RunAll.sh Plot local INFO
 
-# Get mp4 files
-moviepath=~/movies/$(basename -- $outputpath)
-mkdir $moviepath
-rsync $outputpath/PNG/*.mp4 $moviepath
-
 # Goodbye!
 echo "Setup complete."
