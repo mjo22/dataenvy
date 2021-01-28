@@ -26,11 +26,7 @@ class Script(object):
         # Read config
         self.config = unpack(load(configfile))
         # Source environment config if specified
-        if "configenvy" in self.config.keys():
-            if "DATAENVY" not in os.environ.keys():
-                raise ValueError("bash variable DATAENVY not set.")
-            dataenvy, args = os.environ['DATAENVY'], self.config['configenvy']
-            shell_source(f"{dataenvy}/configenvy {args}", verbose=1)
+        self.source()
         # Set variables that can be modified in subclass
         self.io_scheme = "output_all"
         self.datasets = os.environ['DATAPATHS'].split()
@@ -54,6 +50,15 @@ class Script(object):
         Overwrite to run script!
         """
         self.prepare()
+
+    def source(self):
+        """
+        Source files specified in config
+        """
+        temp = self.config["source"]
+        sources = temp if type(temp) is list else [temp]
+        for source in sources:
+            shell_source(source, verbose=1)
 
     def set_config(self):
         """
