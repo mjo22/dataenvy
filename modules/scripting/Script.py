@@ -9,7 +9,7 @@ import os
 import logging
 import numpy as np
 from scripting.config import load, unpack, shell_source
-from scripting.read import get_files, get_settings, get_metadata
+from scripting.prepare import get_files, get_settings, get_metadata
 from scripting.execution import run
 
 

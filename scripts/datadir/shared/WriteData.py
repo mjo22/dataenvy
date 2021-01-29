@@ -12,8 +12,6 @@ from scripting.Script import Script
 from scripting.config import unpack
 from scripting.execution import run
 from scripting.preprocess import preprocess
-from utilities.fits import read_hdul
-
 
 logger = logging.getLogger("WriteData")
 logging.basicConfig()
@@ -36,30 +34,31 @@ class WriteData(Script):
         self.prepare()
         # Unpack
         d, config = self.datasets[0], self.config
-        overwrite, pfunc = self.config["overwrite"], self.config["preprocess"]
+        overwrite, func = config["overwrite"], config["preprocess"]
         infiles, outfiles = self.files[0][d], self.files[1][d]
         meta, settings = self.metadata[d], self.settings
         # Get functions
         module = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
         # Unpack functions
         names = list(settings.keys())
-        calculate = getattr(import_module(f"{module}.process"), names[0])
-        write = getattr(import_module(f"{module}.io"), names[1])
+        read = getattr(import_module("scripting.read_data"), names[0])
+        calculate = getattr(import_module(f"{module}.process"), names[1])
+        write = getattr(import_module(f"{module}.io"), names[2])
         for i in range(len(infiles)):
             inpath, outpath = infiles[i], outfiles[i][0]
             if os.path.exists(outpath) and not overwrite:
                 continue
             infn, outfn = os.path.basename(inpath), os.path.basename(outpath)
             logger.debug(f"Reading {infn}...")
-            data = read_hdul(inpath)[0]
-            if pfunc != '':
-                logger.debug(f"Applying {pfunc}...")
-            data = preprocess(data, pfunc, meta)
+            data = read(inpath, **unpack(settings[names[0]], meta=meta))
+            if func != '':
+                logger.debug(f"Applying {func}...")
+            data = preprocess(data, func, meta)
             logger.debug("Calculating...")
-            result = calculate(data, **unpack(settings[names[0]], meta=meta))
+            result = calculate(data, **unpack(settings[names[1]], meta=meta))
             logger.info(f"Writing {outfn}")
             write(*result, outfiles[i], overwrite=overwrite,
-                  **unpack(settings[names[1]], meta=meta))
+                  **unpack(settings[names[2]], meta=meta))
 
 
 if __name__ == '__main__':

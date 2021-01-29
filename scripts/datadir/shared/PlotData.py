@@ -10,7 +10,7 @@ import logging
 from matplotlib import pyplot as plt
 from importlib import import_module
 from scripting.Script import Script
-from scripting.read import get_frame
+from scripting.prepare import get_frame
 from scripting.config import unpack
 from scripting.preprocess import preprocess
 from scripting.execution import run
