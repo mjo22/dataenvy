@@ -28,7 +28,6 @@ class WriteData(Script):
         super(WriteData, self).__init__(*args)
         self.io_scheme = "output_all"
         self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
-        self.required.extend(["writer"])
 
     def execute(self):
         """
@@ -45,7 +44,7 @@ class WriteData(Script):
         # Unpack functions
         names = list(settings.keys())
         calculate = getattr(import_module(f"{module}.process"), names[0])
-        write = getattr(import_module(f"{module}.io"), config["writer"])
+        write = getattr(import_module(f"{module}.io"), names[1])
         for i in range(len(infiles)):
             inpath, outpath = infiles[i], outfiles[i][0]
             if os.path.exists(outpath) and not overwrite:
@@ -59,7 +58,8 @@ class WriteData(Script):
             logger.debug("Calculating...")
             result = calculate(data, **unpack(settings[names[0]], meta=meta))
             logger.info(f"Writing {outfn}")
-            write(*result, outfiles[i], overwrite=overwrite)
+            write(*result, outfiles[i], overwrite=overwrite,
+                  **unpack(settings[names[1]], meta=meta))
 
 
 if __name__ == '__main__':

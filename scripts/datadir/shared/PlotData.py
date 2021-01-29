@@ -30,7 +30,6 @@ class PlotData(Script):
         self.io_scheme = "output_all"
         self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
         self.optional["fit"] = False
-        self.required.extend(["reader"])
 
     def execute(self):
         """
@@ -47,14 +46,13 @@ class PlotData(Script):
         fit = config["fit"]
         # Unpack functions
         names = list(settings.keys())
-        build_plot = getattr(import_module(f"{module}.plot"), names[0])
-        plot_stat = getattr(import_module(f"{module}.plot"), names[1])
+        reader = getattr(import_module(f"{module}.io"), names[0])
+        build_plot = getattr(import_module(f"{module}.plot"), names[1])
+        plot_stat = getattr(import_module(f"{module}.plot"), names[2])
         if fit:
             calc_fit = getattr(import_module(
-                f"{module}.process"), names[2])
-            plot_fit = getattr(import_module(f"{module}.plot"), names[3])
-        # Get data reader
-        reader = getattr(import_module(f"{module}.io"), config["reader"])
+                f"{module}.process"), names[3])
+            plot_fit = getattr(import_module(f"{module}.plot"), names[4])
         # Run
         for i in range(len(infiles)):
             inpath, outpath = infiles[i], outfiles[i][0]
@@ -62,18 +60,18 @@ class PlotData(Script):
                 continue
             infn, outfn = os.path.basename(inpath), os.path.basename(outpath)
             logger.debug(f"Reading {infn}...")
-            result = reader(inpath)
+            result = reader(inpath, **unpack(settings[names[0]], meta=meta))
             if pfunc != '':
                 logger.debug(f"Applying {pfunc}...")
             result = preprocess(result, pfunc, meta)
-            fig, ax = build_plot(**unpack(settings[names[0]], meta=meta))
+            fig, ax = build_plot(**unpack(settings[names[1]], meta=meta))
             plot_stat(*result, fig, ax,
-                      **unpack(settings[names[1]], meta=meta))
+                      **unpack(settings[names[2]], meta=meta))
             if fit:
                 result = calc_fit(*result,
-                                  **unpack(settings[names[2]], meta=meta))
+                                  **unpack(settings[names[3]], meta=meta))
                 plot_fit(*result, fig, ax,
-                         **unpack(settings[names[3]], meta=meta))
+                         **unpack(settings[names[4]], meta=meta))
             logger.info(f"Writing {outfn}")
             framenum = get_frame(outfn, config['outputext'])
             ax.set_title(f"{meta['label']} Frame {framenum}")
