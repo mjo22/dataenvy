@@ -27,13 +27,10 @@ if [[ ! -f $pyconfig ]]; then
     echo "$pyconfig does not exist"
     exit
 fi
-if [[ ! -f $cfg ]]; then
-    echo $errorsig
-    echo "Local config file local.sh does not exist"
-    exit
+if [[ -f $cfg ]]; then
+    source $cfg
 fi
-
-source $cfg
+    
 
 if [[ $where == "nohup" ]]; then
     rm nohup.out

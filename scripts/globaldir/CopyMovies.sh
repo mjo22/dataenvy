@@ -9,13 +9,11 @@ if [[ $1 == "" ]]; then
     exit
 fi
 
-moviedir=~/movies/$moviedir
-
 if [ ! -d $moviedir ]; then
     mkdir $moviedir
 fi
 
-rsync $GLOBALDIR/PNG/*.mp4 $moviedir
+cp $GLOBALDIR/PNG/*.mp4 $moviedir
 
 datapaths=($DATAPATHS)
 for datapath in "${datapaths[@]}"; do

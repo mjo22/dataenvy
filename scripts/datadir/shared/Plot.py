@@ -16,17 +16,17 @@ from scripting.preprocess import preprocess
 from scripting.execution import run
 
 
-logger = logging.getLogger("PlotData")
+logger = logging.getLogger("Plot")
 logging.basicConfig()
 
 
-class PlotData(Script):
+class Plot(Script):
     """
     Plot some data based on some config file
     """
 
     def __init__(self, *args):
-        super(PlotData, self).__init__(*args)
+        super(Plot, self).__init__(*args)
         self.io_scheme = "output_all"
         self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
         self.optional["fit"] = False
@@ -48,12 +48,13 @@ class PlotData(Script):
         names = list(settings.keys())
         reader = getattr(import_module(f"{module}.io"), names[0])
         build_plot = getattr(import_module(f"{module}.plot"), names[1])
-        plot_stat = getattr(import_module(f"{module}.plot"), names[2])
+        plot_data = getattr(import_module(f"{module}.plot"), names[2])
         if fit:
             calc_fit = getattr(import_module(
                 f"{module}.process"), names[3])
             plot_fit = getattr(import_module(f"{module}.plot"), names[4])
         # Run
+        outpath, outfn = None, None
         for i in range(len(infiles)):
             inpath, outpath = infiles[i], outfiles[i][0]
             if os.path.exists(outpath) and not overwrite:
@@ -65,13 +66,14 @@ class PlotData(Script):
                 logger.debug(f"Applying {pfunc}...")
             result = preprocess(result, pfunc, meta)
             fig, ax = build_plot(**unpack(settings[names[1]], meta=meta))
-            plot_stat(*result, fig, ax,
+            plot_data(*result, fig, ax,
                       **unpack(settings[names[2]], meta=meta))
             if fit:
                 result = calc_fit(*result,
                                   **unpack(settings[names[3]], meta=meta))
                 plot_fit(*result, fig, ax,
                          **unpack(settings[names[4]], meta=meta))
+                ax.legend(loc=1)
             logger.info(f"Writing {outfn}")
             framenum = get_frame(outfn, config['outputext'])
             ax.set_title(f"{meta['label']} Frame {framenum}")
@@ -85,4 +87,4 @@ class PlotData(Script):
 
 
 if __name__ == '__main__':
-    run(PlotData, logger=logger)
+    run(Plot, logger=logger)

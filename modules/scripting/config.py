@@ -12,7 +12,7 @@ def load(fn, **kwargs):
     return toml.load(fn, **kwargs)
 
 
-def unpack(d, meta=None):
+def unpack(settings, meta=None):
     """
     Loads dict read some toml file and evaluates its contents.
     Meta variable and numpy import allow for
@@ -20,7 +20,7 @@ def unpack(d, meta=None):
 
     Parameters
     ----------
-    d : dict
+    settings : dict
 
     Keywords
     --------
@@ -32,16 +32,17 @@ def unpack(d, meta=None):
     d : dict
         Dictionary represention of section.
     """
-    for k in d.keys():
-        if type(d[k]) is str:
+    d = {}
+    for k in settings.keys():
+        if type(settings[k]) is str:
             try:
-                d[k] = eval(d[k])
+                d[k] = eval(settings[k])
             except (NameError, SyntaxError, TypeError) as err:
-                pass
-        elif type(d[k]) is dict:
-            d[k] = unpack(d[k], meta=meta)
+                d[k] = settings[k]
+        elif type(settings[k]) is dict:
+            d[k] = unpack(settings[k], meta=meta)
         else:
-            pass
+            d[k] = settings[k]
     return d
 
 

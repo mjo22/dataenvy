@@ -4,7 +4,7 @@
 
 sourcedir=$(dirname -- $BASH_SOURCE)
 
-temp=($@)
+args=$@
 
 source $sourcedir/local.sh
 

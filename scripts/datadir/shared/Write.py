@@ -13,17 +13,17 @@ from scripting.config import unpack
 from scripting.execution import run
 from scripting.preprocess import preprocess
 
-logger = logging.getLogger("WriteData")
+logger = logging.getLogger("Write")
 logging.basicConfig()
 
 
-class WriteData(Script):
+class Write(Script):
     """
     Write some data based on some config file
     """
 
     def __init__(self, *args):
-        super(WriteData, self).__init__(*args)
+        super(Write, self).__init__(*args)
         self.io_scheme = "output_all"
         self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
 
@@ -62,4 +62,4 @@ class WriteData(Script):
 
 
 if __name__ == '__main__':
-    run(WriteData, logger=logger)
+    run(Write, logger=logger)

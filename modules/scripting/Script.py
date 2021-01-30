@@ -35,14 +35,14 @@ class Script(object):
                          'overwrite': True, 'glob': '',
                          'outputlabel': '', 'preprocess': ''}
 
-    def prepare(self):
+    def prepare(self, **kwargs):
         """
         Prepare to execute script.
         """
         datasets, io_scheme, cfg = self.datasets, self.io_scheme, self.config
         self.metadata = get_metadata(datasets)
         self.set_config()
-        self.files = get_files(cfg, datasets, io_scheme)
+        self.files = get_files(cfg, datasets, io_scheme, **kwargs)
         self.settings = get_settings(cfg)
 
     def execute(self):
@@ -55,12 +55,13 @@ class Script(object):
         """
         Source files specified in config
         """
-        temp = self.config["source"]
-        sources = temp if type(temp) is list else [temp]
-        for source in sources:
-            shell_source(source, verbose=1)
+        if "source" in self.config.keys():
+            temp = self.config["source"]
+            sources = temp if type(temp) is list else [temp]
+            for source in sources:
+                shell_source(source, verbose=0)
 
-    def set_config(self):
+    def set_config(self, local=True):
         """
         Set default arguments in config
         """
@@ -70,13 +71,6 @@ class Script(object):
         for k in required:
             if k not in config.keys():
                 raise ValueError(f'{k} not in config')
-        # Expand to absolute paths and create directories
-        for path in self.datasets:
-            config["inputdir"] = os.path.join(path, config["inputdir"])
-            config["outputdir"] = os.path.join(path, config["outputdir"])
-            if not os.path.exists(config["outputdir"]):
-                print(f"Creating directory {config['outputdir']}")
-                os.mkdir(config["outputdir"])
         # Optional arguments
         for k1 in self.optional.keys():
             if k1 not in config.keys():

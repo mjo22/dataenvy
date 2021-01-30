@@ -37,17 +37,17 @@ def get_files(config, datapaths, scheme, **kwargs):
     return f(config, datapaths, **kwargs)
 
 
-def match(config, datapaths):
+def match(config, datapaths, **kwargs):
     """
     Gather files based on matching frame-to-frame
     """
-    inputfiles, frames = aggregate(config, datapaths, scheme='match')
+    inputfiles, frames = aggregate(config, datapaths, scheme='match', **kwargs)
     keys, N = list(frames.keys()), len(datapaths)
     for i in range(N):
         ki1 = keys[i]
         ki2 = keys[(i+1) % N]
         in1d = np.in1d(frames[ki1], frames[ki2], assume_unique=True)
-        frames[ki1] = np.array(inputfiles[ki1])[in1d]
+        frames[ki1] = np.array(frames[ki1])[in1d]
         inputfiles[ki1] = np.array(inputfiles[ki1])[in1d]
     # Verify matching succeeded
     nframes = len(frames[keys[0]])
@@ -55,7 +55,6 @@ def match(config, datapaths):
         if len(frames[k]) != nframes:
             raise Exception("Frame matching failure")
     frames = frames[keys[0]]
-    globaldir = os.environ['GLOBALDIR'].split('/')[-1]
     # Create output files
     labels = config['outputlabel']
     labels = labels if type(labels) is list else [labels]
@@ -65,8 +64,7 @@ def match(config, datapaths):
         frame = frames[i]
         fns = []
         for label in labels:
-            basefn = f"{label}{globaldir}"
-            fn = f"{basefn}_{frame:05d}{outext}"
+            fn = f"{label}{frame:05d}{outext}"
             fns.append(os.path.join(outputdir, fn))
         outputfiles.append(fns)
     return inputfiles, outputfiles, frames
@@ -86,7 +84,7 @@ def output_one(config, datapaths):
     return aggregate(config, datapaths, scheme='output_one')
 
 
-def aggregate(config, datapaths, scheme='output_all'):
+def aggregate(config, datapaths, scheme='output_all', local=True):
     """
     Aggregate input files and set output files
     """
@@ -112,16 +110,19 @@ def aggregate(config, datapaths, scheme='output_all'):
             p = param[i] if type(param) is list else param
             fparams.append(p)
         # Loop preparation
-        ind, outd = os.path.join(datapath, inputdir), os.path.join(
-            datapath, outputdir)
-        globbed = sorted(glob.glob(f"{ind}/{glb}"))
+        indir = os.path.join(datapath, inputdir)
+        outdir = os.path.join(datapath, outputdir) if local else outputdir
+        if not os.path.exists(outdir):
+            print(f"Creating directory {outdir}")
+            os.mkdir(config["outputdir"])
+        globbed = sorted(glob.glob(f"{indir}/{glb}"))
         inputfiles[datapath], outputfiles[datapath] = [], []
         frames[datapath] = []
         done = False
+        counter = fparams[0]
         for path in globbed:
             fn = os.path.basename(path)
             framenum = get_frame(fn, inext)
-            counter = fparams[0]
             if int(framenum) >= fparams[1] and int(framenum) <= fparams[2]:
                 if counter == fparams[0]:
                     # Collect output filenames in list
@@ -130,9 +131,9 @@ def aggregate(config, datapaths, scheme='output_all'):
                         outpath = []
                         for lab in label:
                             outpath.append(os.path.join(
-                                outd, f"{lab}{basefn}"))
+                                outdir, f"{lab}{basefn}"))
                     else:
-                        outpath = [os.path.join(outd, f"{label}{basefn}")]
+                        outpath = [os.path.join(outdir, f"{label}{basefn}")]
                     # Add files based on output scheme
                     if scheme == 'output_one':
                         if not done:
