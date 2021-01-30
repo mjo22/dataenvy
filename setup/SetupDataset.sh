@@ -18,6 +18,14 @@ outputpath=$2
 setuppath=$(readlink -e $3)
 probeoutput=$(readlink -e $outputpath)
 
+# Get additional args
+temp=($@)
+args="${temp[@]:3}"
+
+if [[ $args == "" ]]; then
+    args="local INFO"
+fi
+
 # Check args
 if [[ "$inputpath" == "" ]]; then
     echo $errorsig
@@ -74,10 +82,12 @@ source $outputpath/link.sh
 bash $setuppath/WriteData.sh $inputpath $outputpath/data
 
 # Write modules
-bash $outputpath/RunModules.sh Write local INFO
+bash $outputpath/RunModules.sh Write $args
 
 # Create plots
-bash $outputpath/RunModules.sh Plot local INFO
-
+if [[ "$args" == *"local"* ]]; then
+    bash $outputpath/RunModules.sh Plot $args
+fi
+    
 # Goodbye!
 echo "Setup complete."
