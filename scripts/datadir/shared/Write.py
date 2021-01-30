@@ -25,7 +25,6 @@ class Write(Script):
     def __init__(self, *args):
         super(Write, self).__init__(*args)
         self.io_scheme = "output_all"
-        self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
 
     def execute(self):
         """

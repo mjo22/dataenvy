@@ -29,8 +29,9 @@ if [[ ! -f $pyconfig ]]; then
 fi
 if [[ -f $cfg ]]; then
     source $cfg
+    source $DATAENVY/configenvy "$(dirname -- $cfg)"
 fi
-    
+
 
 if [[ $where == "nohup" ]]; then
     rm nohup.out

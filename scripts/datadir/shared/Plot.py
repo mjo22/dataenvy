@@ -28,7 +28,6 @@ class Plot(Script):
     def __init__(self, *args):
         super(Plot, self).__init__(*args)
         self.io_scheme = "output_all"
-        self.datasets = [os.path.dirname(os.path.abspath(f"{__file__}/.."))]
         self.optional["fit"] = False
 
     def execute(self):
@@ -80,6 +79,8 @@ class Plot(Script):
             fig.savefig(outpath)
             plt.close(fig)
         # Generate movie
+        if outpath is None:
+            raise IOError("No input files found")
         delim = "_"
         indir = os.path.dirname(outpath)
         base = delim.join(os.path.basename(outfn).split(delim)[:-1])

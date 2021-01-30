@@ -91,6 +91,8 @@ class PlotMatch(Script):
             plt.legend(loc=1)
             fig.savefig(outpath)
             plt.close(fig)
+        if outpath is None:
+            raise IOError("No input files found")
         # Generate movie
         delim = "_"
         indir = os.path.dirname(outpath)
