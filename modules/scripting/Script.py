@@ -30,7 +30,9 @@ class Script(object):
         # Set variables that can be modified in subclass
         self.io_scheme = "output_all"
         self.datasets = os.environ['DATAPATHS'].split()
-        self.required = ['inputext', 'outputext', 'inputdir', 'outputdir']
+        self.required = ['inputext', 'outputext',
+                         'inputdir', 'outputdir',
+                         'module']
         self.optional = {'minframe': -np.inf, 'maxframe': np.inf, 'nskip': 0,
                          'overwrite': True, 'glob': '',
                          'outputlabel': '', 'preprocess': ''}

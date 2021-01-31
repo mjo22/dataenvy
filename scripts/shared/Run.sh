@@ -29,7 +29,7 @@ if [[ ! -f $pyconfig ]]; then
 fi
 if [[ -f $cfg ]]; then
     source $cfg
-    source $DATAENVY/configenvy "$(dirname -- $cfg)"
+    source $DATAENVY/config-env "$(dirname -- $cfg)"
 fi
 
 
@@ -41,7 +41,7 @@ elif [[ $where == "local" ]]; then
 elif [[ $where == "cpu" ]]; then
     sbatch -p ccb $pyscript $pyconfig --log=$log
 elif [[ $where == "gpu" ]]; then
-    sbatch -p gpu --gpus=a100-40gb:1 --cpus-per-gpu=8 --time=600 $pyscript $pyconfig --log=$log
+    sbatch -p gpu --gpus=a100-40gb:1 --cpus-per-gpu=8 $pyscript $pyconfig --log=$log
 else
     echo $errorsig
     echo "$where option is not supported"

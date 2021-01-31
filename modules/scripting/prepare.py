@@ -114,7 +114,7 @@ def aggregate(config, datapaths, scheme='output_all', local=True):
         outdir = os.path.join(datapath, outputdir) if local else outputdir
         if not os.path.exists(outdir):
             print(f"Creating directory {outdir}")
-            os.mkdir(config["outputdir"])
+            os.mkdir(outdir)
         globbed = sorted(glob.glob(f"{indir}/{glb}"))
         inputfiles[datapath], outputfiles[datapath] = [], []
         frames[datapath] = []

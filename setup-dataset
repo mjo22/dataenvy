@@ -15,7 +15,7 @@ fi
 # Gather input and output directories
 inputpath=$(readlink -e $1)
 outputpath=$2
-setuppath=$(readlink -e $3)
+setuppath=$(readlink -e $DATAENVY/setup/$3)
 probeoutput=$(readlink -e $outputpath)
 
 # Get additional args
@@ -35,7 +35,7 @@ fi
 
 if [[ "$probeoutput" != "" ]]; then
     echo "Output path $outputpath exists. Deleting..."
-    bash DeleteDataset.sh $outputpath
+    $DATAENVY/delete-dataset $outputpath
 fi
 
 if [[ "$setuppath" == "" ]]; then

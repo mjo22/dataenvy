@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# A script to prevent Michael from accidentally
+# wiping out his filesystem
+
+errorsig="Error: $(readlink -e $BASH_SOURCE)"
+
+dataset=$(readlink -e $1)
+
+if [[ "$dataset" == "" ]]; then
+    echo $errorsig
+    echo "Please enter a dataset. $1 is not a file path."
+    exit
+fi
+
+if [ -d $dataset/data ] && [[ -f $dataset/metadata.toml ]]; then
+    rm -rd $dataset
+else
+    echo $errorsig
+    echo "Be careful! $dataset does not seem to be a dataset."
+fi

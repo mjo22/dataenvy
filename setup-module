@@ -10,17 +10,19 @@ if [[ $name = "" ]]; then
     exit
 fi
 
-echo "Copying module template to ${name}..."
+outdir=$DATAENVY/modules/$name
 
-cp -r template $name
+echo "Copying module template to ${outdir}..."
+
+cp -r $DATAENVY/modules/template $outdir
 
 echo "Renaming placeholder names..."
 
-find ./$name -name "GREENELEPHANT*" -exec rename "GREENELEPHANT" "${name}" {} ";"
+find $outdir -name "PLACEHOLDER*" -type f -exec rename "PLACEHOLDER" "${name}" {} ";"
 
 echo "Replacing placeholder text..."
 
-find ./$name -maxdepth 1 -type f -exec sed -i s:GREENELEPHANT:$name:g {} \;
+find $outdir -maxdepth 1 -type f -exec sed -i s:PLACEHOLDER:$name:g {} \;
 
 mkdir $DATAENVY/scripts/datadir/$name
 mkdir $DATAENVY/scripts/globaldir/$name

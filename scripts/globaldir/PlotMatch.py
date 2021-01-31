@@ -31,7 +31,6 @@ class PlotMatch(Script):
         self.optional["fit"] = False
         self.optional["title"] = ""
         self.required.append("outputlabel")
-        self.required.append("module")
         del self.optional["outputlabel"]
 
     def execute(self):

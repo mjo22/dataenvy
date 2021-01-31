@@ -35,13 +35,12 @@ class Plot(Script):
         Write plots
         """
         self.prepare()
-        # Get module
-        module = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
         # Unpack settings
         d, config = self.datasets[0], self.config
         overwrite, pfunc = config["overwrite"], config["preprocess"]
         infiles, outfiles = self.files[0][d], self.files[1][d]
         meta, settings = self.metadata[d], self.settings
+        module = config["module"]
         fit = config["fit"]
         # Unpack functions
         names = list(settings.keys())

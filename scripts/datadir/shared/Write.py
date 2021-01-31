@@ -36,8 +36,7 @@ class Write(Script):
         overwrite, func = config["overwrite"], config["preprocess"]
         infiles, outfiles = self.files[0][d], self.files[1][d]
         meta, settings = self.metadata[d], self.settings
-        # Get functions
-        module = os.path.basename(os.path.dirname(os.path.abspath(__file__)))
+        module = config["module"]
         # Unpack functions
         names = list(settings.keys())
         read = getattr(import_module("scripting.read_data"), names[0])

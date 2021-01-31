@@ -21,7 +21,7 @@ if [[ "$setuppath" == "" ]]; then
 fi
 
 # Set location of global linking file
-temp="$DATAENVY/setup/LinkDataset.sh"
+temp="$DATAENVY/utilities/LinkDataset.sh"
 linkfile=$(readlink -e -- $temp)
 
 if [[ "$linkfile" == "" ]]; then
