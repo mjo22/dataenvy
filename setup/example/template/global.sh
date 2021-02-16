@@ -1,24 +1,22 @@
 #!/bin/bash
-#
-#
 
-# Set variable for location of this dataset
+# Set location of this dataset
 datapath=$(readlink -e -- $(dirname -- $BASH_SOURCE))
+datapaths="$DATAPATHS $datapath"
 
-#
-# SET PATH TO SOURCE INPUT DATA
-#
+export DATAPATHS=$(echo $datapaths)
+
+# Set path to source input data
+setuppath="SETUP_PLACEHOLDER"
+setuppaths="$SETUPPATHS $setuppath"
+
+export SETUPPATHS=$(echo $setuppaths)
+
+# Set path to setup folder
 sourcepath="SOURCE_PLACEHOLDER"
-sourcepath=$(readlink -e $sourcepath)
 sourcepaths="$SOURCEPATHS $sourcepath"
 
 export SOURCEPATHS=$(echo $sourcepaths)
 
-#
-# SET PATH TO SETUP DATA
-#
-setuppath="SETUP_PLACEHOLDER"
-setuppath=$(readlink -e $setuppath)
-setuppaths="$SETUPPATHS $setuppath"
-
-export SETUPPATHS=$(echo $setuppaths)
+# Configure, assuming all datasets will set the same variables.
+source $setuppath/Config.sh

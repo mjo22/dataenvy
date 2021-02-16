@@ -15,12 +15,12 @@ fi
 
 cp $GLOBALDIR/PNG/*.mp4 $moviedir
 
-datapaths=($DATAPATHS)
-for datapath in "${datapaths[@]}"; do
-    dataset=$(basename -- $datapath)
-    dir=$moviedir/$dataset
-    if [ ! -d $dir ]; then
-	mkdir $dir
-    fi
-    rsync $datapath/PNG/*.mp4 $dir
-done
+#datapaths=($DATAPATHS)
+#for datapath in "${datapaths[@]}"; do
+#    dataset=$(basename -- $datapath)
+#    dir=$moviedir/$dataset
+#    if [ ! -d $dir ]; then
+#	mkdir $dir
+#    fi
+#    rsync $datapath/PNG/*.mp4 $dir
+#done

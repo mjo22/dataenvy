@@ -5,7 +5,7 @@
 # Input parameters
 input_paths=($@)
 output_directory=./PNG
-orient="v"
+orient="h"
 
 input_basenames=()
 for input_path in "${input_paths[@]}"; do

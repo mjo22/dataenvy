@@ -6,13 +6,16 @@
 sourcedir=$(readlink -e -- $(dirname -- ${BASH_SOURCE}))
 export DATAENVY=$(echo $sourcedir)
 
+# Initialize variable for dataset locations
+export DATAPATHS=""
+
 # Initialize variable for locations of path of source data
 export SOURCEPATHS=""
 
 # Initialize variable for setup data paths
 export SETUPPATHS=""
 
-# Write datasets we are working with for writing and plotting
+# Expand input using * notation
 input=("$@")
 expanded=()
 for candidate in "${input[@]}"; do
@@ -21,18 +24,7 @@ for candidate in "${input[@]}"; do
     done
 done
 
-# Configure local settings. Assume they are shared across input datasets
-if [[ "${expanded[0]}" != "" ]]; then
-    dataset=$(readlink -e "$candidate")
-    if [[ "$dataset" == "" ]]; then
-	echo "$dataset is empty or does not exist"
-	exit
-    fi
-    source $dataset/local.sh
-fi
-
-# Configure global settings and DATAPATHS 
-datasets=()
+# Configure settings
 for candidate in "${expanded[@]}"; do
     dataset=$(readlink -e "$candidate")
     if [[ "$dataset" == "" ]]; then
@@ -42,8 +34,6 @@ for candidate in "${expanded[@]}"; do
 
     source $dataset/global.sh
     
-    datasets+=($dataset)
 done
 
-export DATAPATHS="$(echo ${datasets[@]})"
 export GLOBALDIR="$PWD"

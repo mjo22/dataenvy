@@ -13,7 +13,7 @@ if [[ "$dataset" == "" ]]; then
     exit
 fi
 
-if [ -d $dataset/data ] && [[ -f $dataset/metadata.toml ]]; then
+if [ -f "$dataset/local.sh" ]; then
     rm -rd $dataset
 else
     echo $errorsig

@@ -78,16 +78,16 @@ class PlotMatch(Script):
                 if pfunc != '':
                     logger.debug(f"Applying {pfunc}...")
                 result = preprocess(result, pfunc, meta)
-                plot_data(*result, fig, ax,
-                          **unpack(settings[names[2]], meta=meta))
+                plot = plot_data(*result, fig, ax,
+                                 **unpack(settings[names[2]], meta=meta))
                 if fit:
                     result = calc_fit(*result,
                                       **unpack(settings[names[3]], meta=meta))
-                    plot_fit(*result, fig, ax,
+                    plot_fit(*result, fig, ax, plot,
                              **unpack(settings[names[4]], meta=meta))
             logger.info(f"Writing {os.path.basename(outpath)}")
             ax.set_title(f"{config['title']} Frame {framenum}")
-            plt.legend(loc=1)
+            plt.legend(loc=1, fontsize=8)
             fig.savefig(outpath)
             plt.close(fig)
         if outpath is None:

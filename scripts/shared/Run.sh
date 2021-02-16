@@ -6,17 +6,23 @@ sourcefn=$BASH_SOURCE
 errorsig="ERROR: $sourcefn"
 sourcedir=$(readlink -e $(dirname -- $sourcefn))
 
+# Unpack args for python
 pyscript=$1
 pyconfig=$2
 where=${3:-"nohup"}
-log=${4:-"INFO"}
 
+# Slurm args
+temp=($@)
+args="${temp[@]:3}"
+
+# Configure if running from a dataset
 if [ -f "$sourcedir/metadata.toml" ]; then
-    cfg=$sourcedir/local.sh
-else
-    cfg=$sourcedir/../local.sh
+    source $sourcedir/local.sh
+elif [ -f "$sourcedir/../metadata.toml" ]; then
+    source $sourcedir/../local.sh
 fi
 
+# Check if script and config exist
 if [[ ! -f $pyscript ]]; then
     echo $errorsig
     echo "$pyscript does not exist"
@@ -27,21 +33,15 @@ if [[ ! -f $pyconfig ]]; then
     echo "$pyconfig does not exist"
     exit
 fi
-if [[ -f $cfg ]]; then
-    source $cfg
-    source $DATAENVY/config-env "$(dirname -- $cfg)"
-fi
 
-
+# Run
 if [[ $where == "nohup" ]]; then
     rm nohup.out
-    nohup python $pyscript $pyconfig --log=$log &
+    nohup python $pyscript $pyconfig &
 elif [[ $where == "local" ]]; then
-    python $pyscript $pyconfig --log=$log
-elif [[ $where == "cpu" ]]; then
-    sbatch -p ccb $pyscript $pyconfig --log=$log
-elif [[ $where == "gpu" ]]; then
-    sbatch -p gpu --gpus=a100-40gb:1 --cpus-per-gpu=8 $pyscript $pyconfig --log=$log
+    python $pyscript $pyconfig
+elif [[ $where == "slurm" ]]; then
+    sbatch $args $pyscript $pyconfig
 else
     echo $errorsig
     echo "$where option is not supported"

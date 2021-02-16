@@ -1,18 +1,16 @@
 #!/bin/bash
-#
-#
 
-# Set variable for location of this dataset
+# Set location of this dataset
 datapath=$(readlink -e -- $(dirname -- $BASH_SOURCE))
+export DATAPATHS=$(echo $datapath)
 
-# Set location of setup directory
-temp="PLACEHOLDER"
-setuppath=$(readlink -e -- $temp)
-if [[ "$setuppath" == "" ]]; then
-    echo "$errorsig"
-    echo "Setup directory $temp could not be found"
-    exit
-fi
+# Set path to setup folder
+setuppath="SETUP_PLACEHOLDER"
+export SETUPPATHS=$(echo $setuppath)
 
-# Configure dataset type
+# Set path to source input data
+sourcepath="SOURCE_PLACEHOLDER"
+export SOURCEPATHS=$(echo $sourcepath)
+
+# Configure
 source $setuppath/Config.sh

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source $1/local.sh
+
+datapath=$DATAPATHS
+sourcepath=$SOURCEPATHS
+setuppath=$SETUPPATHS
+
+# Write data
+bash $setuppath/WriteData.sh $sourcepath $datapath/data

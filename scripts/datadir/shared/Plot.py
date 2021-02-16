@@ -64,12 +64,12 @@ class Plot(Script):
                 logger.debug(f"Applying {pfunc}...")
             result = preprocess(result, pfunc, meta)
             fig, ax = build_plot(**unpack(settings[names[1]], meta=meta))
-            plot_data(*result, fig, ax,
-                      **unpack(settings[names[2]], meta=meta))
+            plot = plot_data(*result, fig, ax,
+                             **unpack(settings[names[2]], meta=meta))
             if fit:
                 result = calc_fit(*result,
                                   **unpack(settings[names[3]], meta=meta))
-                plot_fit(*result, fig, ax,
+                plot_fit(*result, fig, ax, plot,
                          **unpack(settings[names[4]], meta=meta))
                 ax.legend(loc=1)
             logger.info(f"Writing {outfn}")
