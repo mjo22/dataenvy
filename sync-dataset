@@ -22,10 +22,13 @@ if [[ "$inputpath" == "" ]]; then
     exit
 fi
 
-if [ ! -f "$outputpath/local.sh" ]; then
-    echo $errorsig
-    echo "$1 does not seem to be a dataset"
-    exit
+if [ -d $1 ]; then
+    outputpath=$(readlink -e $1)
+    if [ ! -f "$outputpath/local.sh" ]; then
+	echo $errorsig
+	echo "$outputpath does not seem to be a dataset"
+	exit
+    fi
 fi
 
 if [[ "$setuppath" == "" ]]; then

@@ -36,7 +36,6 @@ fi
 
 # Run
 if [[ $where == "nohup" ]]; then
-    rm nohup.out
     nohup python $pyscript $pyconfig &
 elif [[ $where == "local" ]]; then
     python $pyscript $pyconfig

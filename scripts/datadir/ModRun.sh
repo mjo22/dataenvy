@@ -10,5 +10,5 @@ source $sourcedir/local.sh
 
 modules=($MODULES)
 for module in "${modules[@]}"; do
-    bash $sourcedir/$module/RunAll.sh $args
+    bash $sourcedir/$module/FindRun.sh $args
 done
