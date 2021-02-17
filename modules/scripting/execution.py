@@ -17,9 +17,9 @@ def run(Script, logger=None):
     # Unpack argument parser
     args = parser.parse_args()
     configfile = os.path.abspath(os.path.expanduser(args.config))
-    loglevel = args.log
+    loglevel = args.log if args.log is not None else "INFO"
     # Set level of logging
-    if loglevel is not None and logger is not None:
+    if logger is not None:
         logger.setLevel(getattr(logging, loglevel.upper()))
     # Execute
     a = Script(configfile)

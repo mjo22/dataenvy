@@ -30,12 +30,11 @@ class Script(object):
         # Set variables that can be modified in subclass
         self.io_scheme = "output_all"
         self.datasets = os.environ['DATAPATHS'].split()
-        self.required = ['inputext', 'outputext',
-                         'inputdir', 'outputdir',
+        self.required = ['inputext', 'outputext', 'inputdir', 'outputdir',
                          'module']
-        self.optional = {'minframe': -np.inf, 'maxframe': np.inf, 'nskip': 0,
-                         'overwrite': True, 'glob': '',
-                         'outputlabel': '', 'preprocess': ''}
+        self.optional = dict(minframe=-np.inf, maxframe=np.inf, nskip=0,
+                             overwrite=True, glob='', outputlabel='',
+                             preprocess='', ncpus=1)
 
     def prepare(self, **kwargs):
         """
@@ -63,7 +62,7 @@ class Script(object):
             for source in sources:
                 shell_source(source, verbose=0)
 
-    def set_config(self, local=True):
+    def set_config(self):
         """
         Set default arguments in config
         """
