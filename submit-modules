@@ -18,16 +18,16 @@ for datapath in "${datapaths[@]}"; do
 
     source local.sh
 
-    if [[ $args == *".toml"* ]]; then
-	modules=($MODULES)
-	for module in "${modules[@]}"; do
-	    cd $module
+    modules=($MODULES)
+    for module in "${modules[@]}"; do
+	cd $module
+	if [[ $args == *".toml"* ]]; then
 	    submit-script $args
-	    cd -
-	done
-    else
-	$args
-    fi
+	else
+	    $args
+	fi
+	cd -
+    done
 
     cd $workingdir
 	

@@ -10,5 +10,9 @@ source $sourcedir/local.sh
 
 modules=($MODULES)
 for module in "${modules[@]}"; do
-    submit-script $args
+    if [[ $args == *".toml"* ]]; then
+	submit-script $args
+    else
+	$args
+    fi
 done
