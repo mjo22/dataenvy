@@ -6,13 +6,11 @@ sourcefn=$BASH_SOURCE
 errorsig="ERROR: $sourcefn"
 sourcedir=$(readlink -e $(dirname -- $sourcefn))
 
+workingdir=$PWD
+
 datapaths=($DATAPATHS)
 
-pyscript=$1
-pyconfig=$2
-
-temp=($@)
-args="${temp[@]:2}"
+args=$@
 
 for datapath in "${datapaths[@]}"; do
 
@@ -20,13 +18,17 @@ for datapath in "${datapaths[@]}"; do
 
     source local.sh
 
-    modules=($MODULES)
-    for module in "${modules[@]}"; do
-	if [ -f $module/$pyconfig ]; then
-	    bash $module/Run.sh $module/$pyscript $module/$pyconfig $args
-	fi
-    done
+    if [[ $args == *".toml"* ]]; then
+	modules=($MODULES)
+	for module in "${modules[@]}"; do
+	    cd $module
+	    submit-script $args
+	    cd -
+	done
+    else
+	$args
+    fi
 
-    cd -
-    
+    cd $workingdir
+	
 done

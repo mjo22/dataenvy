@@ -50,11 +50,13 @@ def match(config, datapaths, **kwargs):
         frames[ki1] = np.array(frames[ki1])[in1d]
         inputfiles[ki1] = np.array(inputfiles[ki1])[in1d]
     # Verify matching succeeded
-    nframes = len(frames[keys[0]])
+    nframes = np.inf
+    temp = None
     for k in keys:
-        if len(frames[k]) != nframes:
-            raise Exception("Frame matching failure")
-    frames = frames[keys[0]]
+        if len(frames[k]) <= nframes:
+            nframes = len(frames[k])
+            temp = k
+    frames = frames[temp]
     # Create output files
     labels = config['outputlabel']
     labels = labels if type(labels) is list else [labels]

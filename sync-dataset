@@ -71,7 +71,9 @@ done
 
 # Write metadata
 if [ ! -f $outputpath/metadata.toml ]; then
-   python $outputpath/write_metadata.py
+    cd $outputpath
+    python write_metadata.py
+    cd -
 fi
 
 # Run linkage

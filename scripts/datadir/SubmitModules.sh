@@ -10,5 +10,5 @@ source $sourcedir/local.sh
 
 modules=($MODULES)
 for module in "${modules[@]}"; do
-    bash $sourcedir/$module/FindRun.sh $args
+    submit-script $args
 done

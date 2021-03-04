@@ -13,7 +13,7 @@ if [ ! -d $moviedir ]; then
     mkdir $moviedir
 fi
 
-cp $GLOBALDIR/PNG/*.mp4 $moviedir
+cp $PWD/PNG/*.mp4 $moviedir
 
 #datapaths=($DATAPATHS)
 #for datapath in "${datapaths[@]}"; do

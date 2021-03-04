@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# Script submission
+
+sourcefn=$BASH_SOURCE
+errorsig="ERROR: $sourcefn"
+sourcedir=$(readlink -e $(dirname -- $sourcefn))
+
+args=("$@")
+
+# Gather config files that we can find
+cfgdir=""
+cfgs=()
+base=()
+counter=0
+for arg in "${args[@]}"; do
+    if [[ "$arg" == *".toml"* ]] && [ -f "$arg" ]; then
+	cfgs+=($arg)
+	if [[ $counter == 0 ]]; then
+	    cfgdir="$(dirname -- $arg)"
+	    base+=("PLACEHOLDER")
+	fi
+	counter+=1
+    else
+	base+=("$arg")
+    fi
+done
+
+# Configure if running from a dataset
+if [ -d "$cfgdir" ]; then
+    if [ -f "$cfgdir/metadata.toml" ]; then
+	source $cfgdir/local.sh
+    elif [ -f "$cfgdir/../metadata.toml" ]; then
+	source $cfgdir/../local.sh
+    fi
+fi
+
+# Gather and run
+for cfg in "${cfgs[@]}"; do
+    cmd=""
+    for arg in "${base[@]}"; do
+	if [[ "$arg" != "PLACEHOLDER" ]]; then
+	    cmd+="$arg "
+	else
+	    cmd+="$cfg "
+	fi
+    done
+    $cmd
+done

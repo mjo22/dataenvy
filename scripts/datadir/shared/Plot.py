@@ -29,15 +29,17 @@ def dispatch(args):
     outpath = outpaths[0] if type(outpaths) is list else outpaths
     if not (os.path.exists(outpath) and not config['overwrite']):
         infn, outfn = os.path.basename(inpath), os.path.basename(outpath)
-        logger.debug(f"Reading {infn}...")
+        logger.info(f"Reading {infn}...")
         result = read(inpath, **unpack(settings[names[0]], meta=meta))
-        logger.debug(f"Applying {config['preprocess']}...")
+        logger.info(f"Applying {config['preprocess']}...")
         result = preprocess(result, config['preprocess'], meta)
         fig, ax = build_plot(**unpack(settings[names[1]], meta=meta))
         plot = plot_data(*result, fig, ax,
                          **unpack(settings[names[2]], meta=meta))
+        logger.info(f"Plotting {plot.__name__}...")
         if config['fit']:
             calc_fit, plot_fit = funcs[3], funcs[4]
+            logger.info(f"Fitting {calc_fit.__name__}...")
             result = calc_fit(*result,
                               **unpack(settings[names[3]], meta=meta))
             plot_fit(*result, fig, ax, plot,

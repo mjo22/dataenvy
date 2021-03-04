@@ -48,7 +48,7 @@ def dispatch(args):
                          **unpack(settings[names[4]], meta=meta))
         logger.info(f"Writing {os.path.basename(outpath)}")
         ax.set_title(f"{config['title']} Frame {framenum}")
-        plt.legend(loc=1, fontsize=8)
+        plt.legend(fontsize=8)
     fig.savefig(outpath)
     plt.close(fig)
 

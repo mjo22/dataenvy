@@ -3,7 +3,10 @@
 # Stacking together plots, generate a movie, delete the stacked images
 
 # Input parameters
-input_paths=($@)
+
+output_basename=$1
+temp=($@)
+input_paths="${temp[@]:1}"
 output_directory=./PNG
 orient="h"
 
@@ -28,11 +31,9 @@ for f in $input_dir1/$input_basename1*.png; do
     frame="${arr[-1]}"
     inputargs=""
     filterargs=""
-    output_basename=""
     for i in "${!input_dirs[@]}"; do
 	dir="${input_dirs[$i]}"
 	input_basename="${input_basenames[$i]}"
-	output_basename="${output_basename}${input_basename}_"
 	inputargs="${inputargs}-i ${dir}/${input_basename}_${frame}.png "
 	filterargs="${filterargs}[$i:v]"
     done
