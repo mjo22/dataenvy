@@ -45,5 +45,9 @@ for cfg in "${cfgs[@]}"; do
 	    cmd+="$cfg "
 	fi
     done
-    $cmd
+    if [[ "$cmd" == *"nohup"* ]]; then
+	$cmd &
+    else
+	$cmd
+    fi
 done

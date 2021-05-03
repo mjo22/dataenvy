@@ -6,14 +6,14 @@
 
 output_basename=$1
 temp=($@)
-input_paths="${temp[@]:1}"
+input_paths=("${temp[@]:1}")
 output_directory=./PNG
 orient="h"
 
 input_basenames=()
 for input_path in "${input_paths[@]}"; do
-    input_basename=$(basename -- $input_path)
-    input_basenames+=($(basename -- $input_basename _))
+    input_basename="$(basename -- $input_path)"
+    input_basenames+=("$(basename -- $input_basename _)")
 done
 
 input_dirs=()
@@ -39,7 +39,7 @@ for f in $input_dir1/$input_basename1*.png; do
     done
     outputpath="${output_directory}/${output_basename}"
     echo "Writing frame ${frame}"
-    ffmpeg -y $inputargs -filter_complex "${filterargs}${orient}stack=inputs=${nargs}[v]" -map "[v]" "${outputpath}${frame}.png" -loglevel warning
+    ffmpeg -y $inputargs -filter_complex "${filterargs}${orient}stack=inputs=${nargs}[v]" -map "[v]" "${outputpath}_${frame}.png" -loglevel warning
 done
 
 bash GenerateMovie.sh $outputpath

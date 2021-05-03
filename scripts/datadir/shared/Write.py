@@ -27,11 +27,11 @@ def dispatch(args):
     if not (os.path.exists(outpath) and not config['overwrite']):
         infn = os.path.basename(inpath)
         outfn = os.path.basename(outpath)
-        logger.info(f"Reading {infn}...")
+        logger.debug(f"Reading {infn}...")
         data = read(inpath, **unpack(settings[r], meta=meta))
-        logger.info(f"Applying {config['preprocess']}...")
+        logger.debug(f"Applying {config['preprocess']}...")
         data = preprocess(data, config['preprocess'], meta)
-        logger.info(f"Calculating {calculate.__name__}...")
+        logger.debug(f"Calculating {calculate.__name__}...")
         result = calculate(data, **unpack(settings[c], meta=meta))
         logger.info(f"Writing {outfn}")
         write(outpaths, *result, overwrite=config['overwrite'],

@@ -38,13 +38,13 @@ def dispatch(args):
             result = read(inpath, **unpack(settings[names[0]], meta=meta))
             logger.debug(f"Applying {config['preprocess']}...")
             result = preprocess(result, config['preprocess'], meta)
-            plot = plot_data(*result, fig, ax,
+            plot = plot_data(*result, fig=fig, ax=ax,
                              **unpack(settings[names[2]], meta=meta))
             if config['fit']:
                 calc_fit, plot_fit = funcs[3], funcs[4]
                 result = calc_fit(*result,
                                   **unpack(settings[names[3]], meta=meta))
-                plot_fit(*result, fig, ax, plot,
+                plot_fit(*result, fig=fig, ax=ax, plot=plot,
                          **unpack(settings[names[4]], meta=meta))
         logger.info(f"Writing {os.path.basename(outpath)}")
         ax.set_title(f"{config['title']} Frame {framenum}")
