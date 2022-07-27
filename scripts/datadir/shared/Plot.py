@@ -47,7 +47,11 @@ def dispatch(args):
             ax.legend(loc=1)
         logger.info(f"Writing {outfn}")
         framenum = get_frame(outfn, config['outputext'])
-        ax.set_title(f"{meta['label']} Frame {framenum}")
+        if config["title"] is not None:
+            title = config["title"]
+        else:
+            title = f"{meta['label']} frame {framenum}"
+        ax.set_title(f"{ax.get_title()} {title}")
         fig.savefig(outpath)
         plt.close(fig)
 
@@ -61,6 +65,7 @@ class Plot(Script):
         super(Plot, self).__init__(*args)
         self.io_scheme = "output_all"
         self.optional["fit"] = False
+        self.optional["title"] = None
 
     def execute(self):
         """
@@ -102,7 +107,7 @@ class Plot(Script):
             elif nproc == 1:
                 dispatch(args[0])
         # Generate movie
-        if nfiles > 0:
+        if nfiles > 1:
             delim = "_"
             outdir, outfn = os.path.split(outfiles[0][0])
             base = delim.join(os.path.basename(outfn).split(delim)[:-1])

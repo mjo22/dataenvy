@@ -15,23 +15,23 @@ base=()
 counter=0
 for arg in "${args[@]}"; do
     if [[ "$arg" == *".toml"* ]] && [ -f "$arg" ]; then
-	cfgs+=($arg)
+	    cfgs+=($arg)
 	if [[ $counter == 0 ]]; then
 	    cfgdir="$(dirname -- $arg)"
 	    base+=("PLACEHOLDER")
 	fi
-	counter+=1
+	    counter+=1
     else
-	base+=("$arg")
+	    base+=("$arg")
     fi
 done
 
 # Configure if running from a dataset
 if [ -d "$cfgdir" ]; then
     if [ -f "$cfgdir/metadata.toml" ]; then
-	source $cfgdir/local.sh
+	    source $cfgdir/local.sh
     elif [ -f "$cfgdir/../metadata.toml" ]; then
-	source $cfgdir/../local.sh
+	    source $cfgdir/../local.sh
     fi
 fi
 
@@ -46,8 +46,8 @@ for cfg in "${cfgs[@]}"; do
 	fi
     done
     if [[ "$cmd" == *"nohup"* ]]; then
-	$cmd &
+	    $cmd &
     else
-	$cmd
+	    $cmd
     fi
 done

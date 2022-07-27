@@ -4,20 +4,17 @@
 
 # Input parameters
 
-output_basename=$1
-temp=($@)
-input_paths=("${temp[@]:1}")
+orient=$1  # v or h
+output_basename=$2  # base filename for output video and images
+temp=($@)  # filepaths, up to frame number
+input_paths=("${temp[@]:2}")
 output_directory=./PNG
-orient="h"
 
 input_basenames=()
+input_dirs=()
 for input_path in "${input_paths[@]}"; do
     input_basename="$(basename -- $input_path)"
     input_basenames+=("$(basename -- $input_basename _)")
-done
-
-input_dirs=()
-for input_path in "${input_paths[@]}"; do
     input_dirs+=($(dirname -- $input_path))
 done
 
@@ -32,10 +29,10 @@ for f in $input_dir1/$input_basename1*.png; do
     inputargs=""
     filterargs=""
     for i in "${!input_dirs[@]}"; do
-	dir="${input_dirs[$i]}"
-	input_basename="${input_basenames[$i]}"
-	inputargs="${inputargs}-i ${dir}/${input_basename}_${frame}.png "
-	filterargs="${filterargs}[$i:v]"
+	    dir="${input_dirs[$i]}"
+	    input_basename="${input_basenames[$i]}"
+	    inputargs="${inputargs}-i ${dir}/${input_basename}_${frame}.png "
+	    filterargs="${filterargs}[$i:v]"
     done
     outputpath="${output_directory}/${output_basename}"
     echo "Writing frame ${frame}"
@@ -44,4 +41,4 @@ done
 
 bash GenerateMovie.sh $outputpath
 
-rm $outputpath*.png
+#rm $outputpath*.png
