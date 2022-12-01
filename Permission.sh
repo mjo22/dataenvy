@@ -6,5 +6,5 @@
 commands=("setup-global" "setup-module" "setup-dataset" "sync-dataset" "write-dataset" "delete-dataset" "submit-script" "submit-modules" "submit-base")
 
 for cmd in "${commands[@]}"; do
-    chmod +x $cmd
+    chmod +x bin/$cmd
 done
