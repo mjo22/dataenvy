@@ -8,5 +8,5 @@ sourcedir=$(readlink -e $(dirname -- $BASH_SOURCE))
 # Python IDE convenience
 export PYTHONSTARTUP=$sourcedir/.pythonrc
 
-# Access dataenvy modules
-export PYTHONPATH="$sourcedir/modules:$PYTHONPATH"
+# Access dataenvy modules and scripting routines.
+export PYTHONPATH="$sourcedir/modules:$sourcedir:$PYTHONPATH"

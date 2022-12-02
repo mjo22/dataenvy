@@ -1,0 +1,3 @@
+For example subclasses of Script.py see Write.py and Plot.py in
+
+dataenvy/scripts/datadir/shared

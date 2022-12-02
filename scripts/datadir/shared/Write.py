@@ -12,7 +12,7 @@ from importlib import import_module
 from scripting.Script import Script
 from scripting.config import unpack
 from scripting.execution import run
-from scripting.preprocess import preprocess
+from reading.preprocess import preprocess
 
 logger = logging.getLogger("Write")
 logging.basicConfig()
@@ -58,7 +58,7 @@ class Write(Script):
         module, ncpus = config["module"], config["ncpus"]
         # Unpack functions
         r, c, w = list(settings.keys())
-        read = getattr(import_module("scripting.read_data"), r)
+        read = getattr(import_module("reading.read_data"), r)
         calculate = getattr(import_module(f"{module}.process"), c)
         write = getattr(import_module(f"{module}.io"), w)
         # Args for dispatch function

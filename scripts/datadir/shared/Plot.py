@@ -13,8 +13,8 @@ from importlib import import_module
 from scripting.Script import Script
 from scripting.prepare import get_frame
 from scripting.config import unpack
-from scripting.preprocess import preprocess
 from scripting.execution import run
+from reading.preprocess import preprocess
 
 
 logger = logging.getLogger("Plot")
