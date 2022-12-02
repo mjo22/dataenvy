@@ -14,7 +14,7 @@ from scripting.Script import Script
 from scripting.prepare import get_frame
 from scripting.config import unpack
 from scripting.execution import run
-from reading.preprocess import preprocess
+from processing.preprocess import preprocess
 
 
 logger = logging.getLogger("Plot")

@@ -1,0 +1,8 @@
+
+
+To setup a new module, run the command
+
+setup-module mymodule
+
+An example of a module could be "histogram", an analysis
+pipeline to visualize histograms of your data.

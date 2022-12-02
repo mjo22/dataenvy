@@ -6,6 +6,9 @@
 sourcedir=$(readlink -e -- $(dirname -- ${BASH_SOURCE}))
 export DATAENVY=$(echo $sourcedir)
 
+# Add dataenvy commands to path
+export PATH="$DATAENVY/bin:$PATH"
+
 # Initialize variable for dataset locations
 export DATAPATHS=""
 
