@@ -33,7 +33,7 @@ fi
 
 if [[ "$probeoutput" != "" ]]; then
     echo "Output path $outputpath exists. Deleting..."
-    $DATAENVY/delete-dataset $outputpath
+    $DATAENVY/bin/delete-dataset $outputpath
 fi
 
 if [[ "$setuppath" == "" ]]; then
@@ -43,10 +43,10 @@ if [[ "$setuppath" == "" ]]; then
 fi
 
 # Sync dataset 
-$DATAENVY/sync-dataset $outputpath $inputpath $3
+$DATAENVY/bin/sync-dataset $outputpath $inputpath $3
 
 # Write data
-$DATAENVY/write-dataset $outputpath
+$DATAENVY/bin/write-dataset $outputpath
     
 # Goodbye!
 echo "Setup complete."
