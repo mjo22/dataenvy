@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Setup many datasets at once, using the same name as
+# the input directory
+
+sourcefn=$BASH_SOURCE
+errorsig="ERROR: $sourcefn"
+sourcedir=$(readlink -e $(dirname -- $sourcefn))
+
+# Expand input using * notation. First input
+# is dataset type, rest is datasets.
+input=("$@")
+setup="${input[0]}"
+expanded=()
+for directory in "${input[@]:1}"; do
+    for d in $directory; do
+        expanded+=($d)
+    done
+done
+
+# Setup datasets
+for directory in "${expanded[@]}"; do
+    dataset=$(basename -- $directory)
+    setup-dataset $directory ./$dataset $setup
+done

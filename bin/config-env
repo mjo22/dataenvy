@@ -4,10 +4,7 @@
 
 # Set location of dataenvy repository
 sourcedir=$(readlink -e -- $(dirname -- ${BASH_SOURCE}))
-export DATAENVY=$(echo $sourcedir)
-
-# Add dataenvy commands to path
-export PATH="$DATAENVY/bin:$PATH"
+export DATAENVY=$(readlink -e -- ${sourcedir}/..)
 
 # Initialize variable for dataset locations
 export DATAPATHS=""
@@ -23,7 +20,7 @@ input=("$@")
 expanded=()
 for candidate in "${input[@]}"; do
     for c in $candidate; do
-	expanded+=($c)
+        expanded+=($c)
     done
 done
 
@@ -31,8 +28,8 @@ done
 for candidate in "${expanded[@]}"; do
     dataset=$(readlink -e "$candidate")
     if [[ "$dataset" == "" ]]; then
-	echo "$dataset is empty or does not exist"
-	exit
+        echo "$dataset is empty or does not exist"
+        exit
     fi
 
     source $dataset/global.sh

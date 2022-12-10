@@ -140,7 +140,7 @@ def aggregate(config, datapaths, scheme='output_all', local=True):
                     if scheme == 'output_one':
                         if not done:
                             for p in outpath:
-                                temp = p.replace(framenum, '')
+                                temp = p.replace(f'_{framenum}', '')
                                 outputfiles[datapath].append(temp)
                             done = True
                     elif scheme == 'output_all':

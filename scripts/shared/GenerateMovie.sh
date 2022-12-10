@@ -18,7 +18,7 @@ output_directory=${2:-"$input_directory"}
 output_basename=$input_basename
 
 # FFMPEG parameters
-fps=3
-ffmpeg -framerate $fps -pattern_type glob_sequence -i $input_directory/$input_basename%*.png -vcodec libx264 -pix_fmt yuv420p -y $output_directory/$output_basename.mp4
+fps=2
+ffmpeg -framerate $fps -pattern_type glob_sequence -i $input_directory/$input_basename%*.png -c:v libx264 -pix_fmt yuv420p -y $output_directory/$output_basename.mp4
+# ffmpeg -framerate $fps -pattern_type glob_sequence -i $input_directory/$input_basename%*.png -vcodec libx264 -pix_fmt yuv420p -y $output_directory/$output_basename.mp4
 # -f image2
-#ffmpeg -framerate $fps -pattern_type glob_sequence -i "$input_directory/$input_basename%*.png" -c:v libx264 -pix_fmt yuv420p -y "$output_directory/$output_basename.mp4"
