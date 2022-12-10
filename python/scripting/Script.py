@@ -66,7 +66,10 @@ class Script(object):
         """
         Set default arguments in config
         """
-        config = self.config
+        config, datasets = self.config, self.datasets
+        # Setting optional config with metadata currently
+        # only supporting for len(datasets) = 1
+        meta = self.metadata[datasets[0]]
         required, optional = self.required, self.optional
         # Required arguments
         for k in required:
@@ -76,6 +79,11 @@ class Script(object):
         for k1 in self.optional.keys():
             if k1 not in config.keys():
                 config[k1] = optional[k1]
+            else:
+                try:
+                    config[k1] = eval(config[k1])
+                except (NameError, SyntaxError, TypeError) as err:
+                    config[k1] = config[k1]
         return config
 
 
