@@ -21,5 +21,9 @@ done
 # Setup datasets
 for directory in "${expanded[@]}"; do
     dataset=$(basename -- $directory)
-    setup-dataset $directory ./$dataset $setup
+    if [ ! -d ./$dataset ]; then
+    	setup-dataset $directory ./$dataset $setup
+    else
+	echo "Dataset $dataset already exists. Skipping..."
+    fi
 done
