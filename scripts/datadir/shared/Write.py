@@ -24,9 +24,8 @@ def dispatch(args):
     r, c, w = list(settings.keys())
     inpath, outpaths = files
     outpath = outpaths[0] if type(outpaths) is list else outpaths
+    infn, outfn = os.path.basename(inpath), os.path.basename(outpath)
     if not (os.path.exists(outpath) and not config['overwrite']):
-        infn = os.path.basename(inpath)
-        outfn = os.path.basename(outpath)
         logger.debug(f"Reading {infn}...")
         data = read(inpath, **unpack(settings[r], meta=meta))
         logger.debug(f"Applying {config['preprocess']}...")
@@ -36,6 +35,8 @@ def dispatch(args):
         logger.info(f"Writing {outfn}")
         write(outpaths, *result, overwrite=config['overwrite'],
               **unpack(settings[w], meta=meta))
+   else:
+        logger.debug(f"Skipping {outfn} (already written)")
 
 
 class Write(Script):
@@ -66,18 +67,24 @@ class Write(Script):
         # Run
         ncpus = os.cpu_count() if ncpus == -1 else ncpus
         nfiles = len(infiles)
-        nchunks = nfiles // ncpus
-        for n in range(nchunks+1):
-            nproc = ncpus if n < nchunks else nfiles % ncpus
-            args = []
-            for m in range(nproc):
-                idx = m+n*ncpus
-                args.append(((infiles[idx], outfiles[idx]), *a))
-            if nproc > 1:
-                with mp.Pool(nproc) as pool:
-                    pool.map(dispatch, args)
-            elif nproc == 1:
-                dispatch(args[0])
+        if nfiles > 0:
+            nchunks = nfiles // ncpus
+            for n in range(nchunks+1):
+                nproc = ncpus if n < nchunks else nfiles % ncpus
+                args = []
+                for m in range(nproc):
+                    idx = m+n*ncpus
+                    args.append(((infiles[idx], outfiles[idx]), *a))
+                if nproc > 1:
+                    with mp.Pool(nproc) as pool:
+                        pool.map(dispatch, args)
+                elif nproc == 1:
+                    dispatch(args[0])
+        else:
+            dataset = os.path.basename(d)
+            inputdir = os.path.join(dataset, config['inputdir'])
+            inputpath = os.path.join(inputdir, config['glob'])
+            logger.debug(f"No input files found for {inputpath} between frames {config['minframe']}-{config['maxframe']}.")
 
 
 if __name__ == '__main__':

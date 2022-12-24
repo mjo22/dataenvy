@@ -41,22 +41,31 @@ class Average(Script):
         calculate = getattr(import_module(f"{module}.process"), c)
         write = getattr(import_module(f"{module}.io"), w)
         # Run
-        outpath = outpaths[0] if type(outpaths) is list else outpaths
-        if not (os.path.exists(outpath) and not config['overwrite']):
-            data = []
-            for inpath in inpaths:
-                infn = os.path.basename(inpath)
-                logger.debug(f"Reading {infn}...")
-                temp = read(inpath, **unpack(settings[r], meta=meta))
-                logger.debug(f"Applying {config['preprocess']}...")
-                temp = preprocess(temp, config['preprocess'], meta)
-                data.append(temp)
+        nfiles = len(inpaths)
+        if nfiles > 0:
+            outpath = outpaths[0] if type(outpaths) is list else outpaths
             outfn = os.path.basename(outpath)
-            logger.debug(f"Calculating {calculate.__name__}...")
-            result = calculate(data, **unpack(settings[c], meta=meta))
-            logger.info(f"Writing {outfn}")
-            write(outpaths, *result, overwrite=config['overwrite'],
-                  **unpack(settings[w], meta=meta))
+            if not (os.path.exists(outpath) and not config['overwrite']):
+                data = []
+                for inpath in inpaths:
+                    infn = os.path.basename(inpath)
+                    logger.debug(f"Reading {infn}...")
+                    temp = read(inpath, **unpack(settings[r], meta=meta))
+                    logger.debug(f"Applying {config['preprocess']}...")
+                    temp = preprocess(temp, config['preprocess'], meta)
+                    data.append(temp)
+                logger.debug(f"Calculating {calculate.__name__}...")
+                result = calculate(data, **unpack(settings[c], meta=meta))
+                logger.info(f"Writing {outfn}")
+                write(outpaths, *result, overwrite=config['overwrite'],
+                      **unpack(settings[w], meta=meta))
+            else:
+                logger.debug(f"Skipping {outfn} (already written)")
+        else:
+            dataset = os.path.basename(d)
+            inputdir = os.path.join(dataset, config['inputdir'])
+            inputpath = os.path.join(inputdir, config['glob'])
+            logger.debug(f"No input files found for {inputpath} between frames {config['minframe']}-{config['maxframe']}.")
 
 
 if __name__ == '__main__':

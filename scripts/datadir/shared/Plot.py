@@ -27,8 +27,8 @@ def dispatch(args):
     names = list(settings.keys())
     inpath, outpaths = files
     outpath = outpaths[0] if type(outpaths) is list else outpaths
+    infn, outfn = os.path.basename(inpath), os.path.basename(outpath)
     if not (os.path.exists(outpath) and not config['overwrite']):
-        infn, outfn = os.path.basename(inpath), os.path.basename(outpath)
         logger.debug(f"Reading {infn}...")
         result = read(inpath, **unpack(settings[names[0]], meta=meta))
         logger.debug(f"Applying {config['preprocess']}...")
@@ -54,6 +54,8 @@ def dispatch(args):
         ax.set_title(f"{ax.get_title()} {title}")
         fig.savefig(outpath)
         plt.close(fig)
+    else:
+        logger.debug(f"Skipping {outfn} (already written)")
 
 
 class Plot(Script):
@@ -94,25 +96,31 @@ class Plot(Script):
         # Run
         ncpus = os.cpu_count() if ncpus == -1 else ncpus
         nfiles = len(infiles)
-        nchunks = nfiles // ncpus
-        for n in range(nchunks+1):
-            nproc = ncpus if n < nchunks else nfiles % ncpus
-            args = []
-            for m in range(nproc):
-                idx = m+n*ncpus
-                args.append(((infiles[idx], outfiles[idx]), *a))
-            if nproc > 1:
-                with mp.Pool(nproc) as pool:
-                    pool.map(dispatch, args)
-            elif nproc == 1:
-                dispatch(args[0])
-        # Generate movie
-        if nfiles > 1:
-            delim = "_"
-            outdir, outfn = os.path.split(outfiles[0][0])
-            base = delim.join(os.path.basename(outfn).split(delim)[:-1])
-            cmd = f"bash {d}/{module}/GenerateMovie.sh {outdir}/{base} {d}/PNG"
-            os.system(cmd)
+        if nfiles > 0:
+            nchunks = nfiles // ncpus
+            for n in range(nchunks+1):
+                nproc = ncpus if n < nchunks else nfiles % ncpus
+                args = []
+                for m in range(nproc):
+                    idx = m+n*ncpus
+                    args.append(((infiles[idx], outfiles[idx]), *a))
+                    if nproc > 1:
+                        with mp.Pool(nproc) as pool:
+                            pool.map(dispatch, args)
+                    elif nproc == 1:
+                        dispatch(args[0])
+            # Generate movie
+            if nfiles > 1:
+                delim = "_"
+                outdir, outfn = os.path.split(outfiles[0][0])
+                base = delim.join(os.path.basename(outfn).split(delim)[:-1])
+                cmd = f"bash {d}/{module}/GenerateMovie.sh {outdir}/{base} {d}/PNG"
+                os.system(cmd)
+        else:
+            dataset = os.path.basename(d)
+            inputdir = os.path.join(dataset, config['inputdir'])
+            inputpath = os.path.join(inputdir, config['glob'])
+            logger.debug(f"No input files found for {inputpath} between frames {config['minframe']}-{config['maxframe']}.")
 
 
 if __name__ == '__main__':
